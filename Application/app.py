@@ -1,10 +1,10 @@
 import gradio as gr
-from A2T import audio_to_translate
-from V2T import video_translate
-from T2T import text_translate
-from M2T import microphone_to_translation
-from live import audio_streaming
-from TtS import text_to_speech
+from Audio_to_Translation import audio_to_translate
+from Video_to_Translation import video_translate
+from Text_to_Translation import text_translate
+from Microphone_to_Translation import microphone_to_translation
+from Live_Streaming import audio_streaming
+from Text_to_Speech import text_to_speech
 
 
 
