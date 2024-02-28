@@ -1,0 +1,4 @@
+gradio==4.18.0
+transformers==4.37.2
+faster_whisper
+moviepy.editor
