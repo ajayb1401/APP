@@ -1,7 +1,5 @@
-from faster_whisper import WhisperModel
-model=WhisperModel("large-v2")
 final=[]
-def  audio_streaming(input):
+def  audio_streaming(input,model):
    seg=" "
    segments, info = model.transcribe((input))
    for segment in segments:

@@ -1,10 +1,8 @@
-from faster_whisper import WhisperModel
 from moviepy.editor import VideoFileClip
 from  text_to_translation import text_translate
 import tempfile
-model = WhisperModel("large-v2")
 translator = text_translate
-def video_translate(video_path, target_language):
+def video_translate(video_path, target_language,model,pipe):
     with tempfile.NamedTemporaryFile(suffix=".mp3") as temp_audio_file:
         video = VideoFileClip(video_path)
         audio = video.audio
@@ -16,5 +14,5 @@ def video_translate(video_path, target_language):
         segments, _ = model.transcribe(audio_clip)
         translated_text = ""
         for segment in segments:
-            translated_text += translator(segment.text,target_language) + " "
+            translated_text += translator(segment.text,target_language,pipe) + " "
     return translated_text.strip()

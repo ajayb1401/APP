@@ -6,7 +6,12 @@ from microphone_to_translation import microphone_to_translation
 from live_streaming import audio_streaming
 from text_to_speech import text_to_speech
 
-
+from faster_whisper import WhisperModel
+from transformers import pipeline
+from TTS.api import TTS
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
+model = WhisperModel("large-v1")
+pipe = pipeline(task='text2text-generation', model='facebook/m2m100_418M')
 
 languages = {
     "Afrikaans": "af", "Amharic": "am", "Arabic": "ar", "Asturian": "ast", "Azerbaijani": "az",
@@ -33,20 +38,20 @@ languages = {
 
 def audio_text(audio_file, target_language):
     target_language_name = list(languages.values())[list(languages.keys()).index(target_language)]
-    return audio_to_translate(audio_file, target_language_name)
+    return audio_to_translate(audio_file, target_language_name,model,pipe)
 def video_translation(videofile,target_lang):
     target_language_name = list(languages.values())[list(languages.keys()).index(target_lang)]
-    return video_translate(videofile,target_language_name)
+    return video_translate(videofile,target_language_name,model,pipe)
 def text_translation(text,targetlang):
     target_language_name = list(languages.values())[list(languages.keys()).index(targetlang)]
-    return text_translate(text,target_language_name)
+    return text_translate(text,target_language_name,pipe)
 def microphone_text(audio,targetlang):
     target_language_name = list(languages.values())[list(languages.keys()).index(targetlang)]
-    return microphone_to_translation(audio,target_language_name)
+    return microphone_to_translation(audio,target_language_name,model,pipe)
 def microphone_live(audio):
-    return audio_streaming(audio)
+    return audio_streaming(audio,model)
 def text_speech(text,audio):
-   return text_to_speech(text,audio)
+   return text_to_speech(text,audio,tts)
 
 with gr.Blocks() as trail:
    with gr.Tab("audio to translation"):
@@ -127,4 +132,4 @@ with gr.Blocks() as trail:
                 description="Enter text and upload an audio file for the speaker to listen to the generated speech.",
                 allow_flagging=False
         )
-trail.launch()
+trail.launch(share=True)

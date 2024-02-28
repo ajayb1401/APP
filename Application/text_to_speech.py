@@ -1,6 +1,4 @@
-from TTS.api import TTS
-tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
-def text_to_speech(text, speaker_audio_path):
+def text_to_speech(text, speaker_audio_path,tts):
     output_file_path = "output.wav"
     language = "en"
     speaker_wav = speaker_audio_path
