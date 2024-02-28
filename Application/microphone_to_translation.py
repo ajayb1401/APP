@@ -1,5 +1,5 @@
 from faster_whisper import WhisperModel
-from Text_to_Translation import text_translate
+from text_to_translation import text_translate
 
 model = WhisperModel("large-v2")
 
