@@ -1,9 +1,12 @@
 import gradio as gr
-from tab1 import audio_to_translate
-from tab2 import video_translate
-from tab3 import text_translate
-from tab4 import microphone_to_translation
-from tab5 import audio_streaming
+from A2T import audio_to_translate
+from V2T import video_translate
+from T2T import text_translate
+from M2T import microphone_to_translation
+from live import audio_streaming
+from TtS import text_to_speech
+
+
 
 languages = {
     "Afrikaans": "af", "Amharic": "am", "Arabic": "ar", "Asturian": "ast", "Azerbaijani": "az",
@@ -42,6 +45,8 @@ def microphone_text(audio,targetlang):
     return microphone_to_translation(audio,target_language_name)
 def microphone_live(audio):
     return audio_streaming(audio)
+def text_speech(text,audio):
+   return text_to_speech(text,audio)
 
 with gr.Blocks() as trail:
    with gr.Tab("audio to translation"):
@@ -52,8 +57,8 @@ with gr.Blocks() as trail:
             fn=audio_text,
             inputs=audio_input,
             outputs=text_output,
-            examples=[["sam1.mp3"],
-                      ["sam2.mp3"]],
+            examples=[["examples/sample1.mp3"],
+                      ["examples/sample2.mp3"]],
             title="Audio to text Translator",
             allow_flagging=False
         )
@@ -65,9 +70,9 @@ with gr.Blocks() as trail:
                 fn=video_translation,
                 inputs=video_input,
                 outputs=text_output,
-                examples=[["sam1.mp4"],
-                          ["sam2.mp4"],
-                          ["sam3.mp4"]],
+                examples=[["examples/sample1.mp4"],
+                          ["examples/sample2.mp4"],
+                          ["examples/sample3.mp4"]],
                 title="video-to-Text Translator",
                 allow_flagging=False
             )
@@ -79,9 +84,9 @@ with gr.Blocks() as trail:
                 fn=text_translation,
                 inputs=audio_input,
                 outputs=text_output,
-                examples=[["He is good boy"],
-                          ["This is my New home"],
-                          ["I Love my Puppy"]],
+                examples=[["The definition of technology is the application of scientific knowledge for practical purposes or applications. Technology uses scientific principles, and applies them to change the environment in which humans live. Technology can also use scientific principles to advance industry or other human constructions."],
+                          ["आर्टिफिशियल इंटेलिजेंस (AI) क्या है और कैसे काम करता है? AI यानी Artificial Intelligence को हिंदी में कृत्रिम बुद्धिमत्ता कहते हैं, जिसका मतलब है बनावटी यानी कृत्रिम तरीके से विकसित की गई बौद्धिक क्षमता. आर्टिफिशियल इंटेलिजेंस कम्प्यूटर साइंस की एक एडवांस्ड शाखा है."],
+                          ["每个人都有自己的梦想，长大后要实现。有些孩子想变得有钱，以便可以买到任何东西，有些孩子想成为医生，律师或工程师。但是只有您知道，要实现这些目标，您必须努力工作并保持专注。在这篇关于我的梦想的文章中，我们将讨论有助于实现我的梦想的基本事物。"]],
                 title="Text to Translation",
                 description="Enter the text to Translate.",
                 allow_flagging=False
@@ -109,5 +114,17 @@ with gr.Blocks() as trail:
                 description="Speak into the microphone and get text Transcription.",
                 allow_flagging=False,
                 live="true"
+        )
+   with gr.Tab("Text to speech converter"):
+    input=[gr.Textbox(label="Enter Text"),gr.Dropdown(choices=["examples/male.mp3", "examples/female.mp3"], label="Select Audio")]
+    audio_output=gr.Audio(type="filepath", label="Generated Speech")
+    gr.Interface(
+                fn=text_speech,
+                inputs=input,
+                outputs=audio_output,
+                examples=[["सुप्रभातम आपका दिन शुभ हो"],["The soft whispers of nature create a calming melody, inviting a moment of reflection in the quiet canvas of dusk."]],
+                title="Text-to-Speech",
+                description="Enter text and upload an audio file for the speaker to listen to the generated speech.",
+                allow_flagging=False
         )
 trail.launch()

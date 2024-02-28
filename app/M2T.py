@@ -1,6 +1,5 @@
 from faster_whisper import WhisperModel
-from moviepy.editor import AudioFileClip, VideoFileClip
-from tab3 import text_translate
+from T2T import text_translate
 
 model = WhisperModel("large-v2")
 

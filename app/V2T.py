@@ -1,7 +1,6 @@
 from faster_whisper import WhisperModel
 from moviepy.editor import VideoFileClip
-from  tab3 import text_translate
-import gradio as gr
+from  T2T import text_translate
 import tempfile
 model = WhisperModel("large-v2")
 translator = text_translate

@@ -1,5 +1,5 @@
 from faster_whisper import WhisperModel
-from tab3 import text_translate
+from T2T import text_translate
 model = WhisperModel("large-v2")
 translator = text_translate
 def audio_to_translate(input, target_language):
