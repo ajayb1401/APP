@@ -5,12 +5,13 @@ from text_to_translation import text_translate
 from microphone_to_translation import microphone_to_translation
 from live_streaming import audio_streaming
 from text_to_speech import text_to_speech
+from timestamping import timestamp
 
 from faster_whisper import WhisperModel
 from transformers import pipeline
 from TTS.api import TTS
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
-model = WhisperModel("large-v1")
+model = WhisperModel("large-v2")
 pipe = pipeline(task='text2text-generation', model='facebook/m2m100_418M')
 
 languages = {
@@ -52,6 +53,8 @@ def microphone_live(audio):
     return audio_streaming(audio,model)
 def text_speech(text,audio):
    return text_to_speech(text,audio,tts)
+def whisper_timestamp(input):
+    return timestamp(input)
 
 with gr.Blocks() as trail:
    with gr.Tab("audio to translation"):
@@ -121,7 +124,7 @@ with gr.Blocks() as trail:
                 live="true"
         )
    with gr.Tab("Text to speech converter"):
-    input=[gr.Textbox(label="Enter Text"),gr.Dropdown(choices=["examples/male.mp3", "examples/female.mp3"], label="Select Audio")]
+    input=[gr.Textbox(label="Enter Text"),gr.Audio(type="filepath",label="Select Audio")]
     audio_output=gr.Audio(type="filepath", label="Generated Speech")
     gr.Interface(
                 fn=text_speech,
@@ -129,7 +132,19 @@ with gr.Blocks() as trail:
                 outputs=audio_output,
                 examples=[["सुप्रभातम आपका दिन शुभ हो"],["The soft whispers of nature create a calming melody, inviting a moment of reflection in the quiet canvas of dusk."]],
                 title="Text-to-Speech",
-                description="Enter text and upload an audio file for the speaker to listen to the generated speech.",
+                description="upload an audio file for the speaker to generated text.",
                 allow_flagging=False
         )
-trail.launch(share=True)
+   with gr.Tab("Whisper Timestamp"):
+    aud_input=gr.Audio(type="filepath",label="upload audio")
+    text_output=gr.TextArea(type="text")
+    gr.Interface(
+            fn=whisper_timestamp,
+            inputs=aud_input,
+            outputs=text_output,
+            title="Text to Audio converter",
+            examples=[["examples/sample1.mp3"],["examples/sample2.mp3"]],
+            description="Type yours and get Timestamp.",
+            allow_flagging=False,
+        )
+trail.launch()
